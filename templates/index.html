@@ -1,0 +1,116 @@
+<html>  
+<head>  
+    <title>upload</title>  
+</head>  
+<body>  
+    <div>
+        <form action = "/api"" method = "post" enctype="multipart/form-data">  
+            <input type="file" name="file" />  
+            <input type = "submit" value="Upload">  
+        </form>
+    </div>
+    <div style="margin-left: 700px; margin-top:70px;">
+        <input type="search" name="inputsearch" id="inputsearch" class="form-control" value="" required="required" title="">
+        
+        <button type="submit" id='submit' class="btn btn-primary">Search</button> 
+    </div>
+
+    <div>
+        <div id="display-graph"></div>
+    </div>
+    <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"> </script>
+    <script type="text/javascript">
+
+        var viz;
+
+        function draw() {
+            var search = $("input[name=inputsearch]").val();
+
+            console.log(search);
+            var config = {
+                container_id: "display-graph",
+                server_url: "bolt://100.26.232.66:32904",
+                server_user: "neo4j",
+                server_password: "manners-teaspoons-paneling",
+                labels: {
+
+                    "Document": {
+                        "caption": "id",
+                        // "size": "id"
+                    },
+                    "Page":{
+                        "caption": "page_num"
+
+                    },
+                    "Title":{
+                        "caption": "title"
+                    },
+                    "Figure":{
+                        "caption": "figure"
+                    },
+                    "Paragraph":{
+                       // "caption": "text"
+                    }
+
+            },
+                relationships: {
+
+                    "Page": {
+                        // "thickness":
+                        "caption": false
+                    },
+                    "Paragraph_count":{
+                        "caption": false,
+                        "thickness": "text"
+                    },
+                
+                    "Title_count":{
+                        "caption": false,
+                        "thickness": "title"
+                    },
+                    "Figure_count":{
+                        "caption": false,
+                        "thickness": "figure"
+                    },
+          
+                    "Table_count":{
+                        "caption": false,
+                        "thickness": "table"
+                    }
+
+                },
+                initial_cypher: "CALL db.index.fulltext.queryNodes('TextIndex', \"" + $("input[name=inputsearch]").val() + "\") YIELD node, score  MATCH (n:Document)-[p:Page]->(m:Page), (m)-[pc:Paragraph_count]->(node), (m)-[tc:Title_count]->(t:Title) optional match (m)-[fc:Figure_count]->(f:Figure) optional match (m)-[tac:Table_count]->(ta:Table) return *",
+
+                // initial_cypher: "MATCH (n:Document)-[p:Page]->(m:Page), (m)-[pc:Paragraph_count]->(pa:Paragraph), (m)-[tc:Title_count]->(t:Title), (m)-[fc:Figure_count]->(f:Figure), (m)-[tac:Table_count]->(ta:Table) return *",
+                // initial_cypher: "CALL db.index.fulltext.queryNodes('ArticleIndex', \"" + $("input[name=inputsearch]").val() + "\") YIELD node, score   return  *",
+                arrows: true,
+                hierarchical_layout: true,
+                hierarchical_sort_method: "directed",
+            };
+
+            viz = new NeoVis.default(config);
+            viz.render();
+
+            console.log(viz);
+            // console.log("the", search);
+
+        }
+        $("#submit").click(function () {
+            draw();
+
+        })
+
+        var input = document.getElementById('inputsearch');
+        input.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("submit").click();
+                }
+});
+
+    </script>
+
+</body>  
+</html> 
