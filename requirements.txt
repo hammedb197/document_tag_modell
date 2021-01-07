@@ -6,7 +6,7 @@ EbookLib==0.17.1
 extract-msg==0.23.1
 IMAPClient==2.1.0
 imutils==0.5.3
-lxml==4.5.0
+lxml==4.6.2
 numpy==1.18.3
 olefile==0.46
 pandas==1.0.3
