@@ -11,7 +11,7 @@ numpy==1.18.3
 olefile==0.46
 pandas==1.0.3
 pdfminer.six==20181108
-Pillow==7.1.1
+Pillow==9.0.1
 pycryptodome==3.9.7
 pytesseract==0.3.4
 python-dateutil==2.8.1
